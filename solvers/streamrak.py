@@ -252,9 +252,6 @@ class Streamrak(Lpkrr):
         # select_landmarks
         # train_with_timeit
         # predict_with_timeit
-
-    ## Get functions
-        # get_model
     """
     def __init__(self, config):
 

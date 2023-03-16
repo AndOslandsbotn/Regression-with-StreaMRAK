@@ -1,7 +1,5 @@
 import numpy as np
 from scipy.spatial.distance import cdist
-from time import perf_counter
-from scipy import spatial
 
 def choose_kernel(kernelType = "gaussianKernel"):
     d = kernelType
