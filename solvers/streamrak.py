@@ -10,14 +10,51 @@ import matplotlib.pyplot as plt
 plt.style.use('bmh')
 
 class Lpkrr():
-    """Laplacian pyramid (LP) formulation of kernel ridge regression (KRR)
+    """Base class for the Streamrak algorithm. Laplacian pyramid (LP) formulation of kernel ridge regression (KRR).
+    Uses FALKON as a bases solver. This class generates the Lpkrr trainer and prediction interface
+    that allows training of a model and prediction with a trained model
+
+        ## Variables
+        - config: solver configurations
+        - pred_dict: dictionary pred_dict['lvl'] containing the prediction results at a given level
+        - res_dict: dictionary res_dict['lvl'] containing the residuals at a given level on which the next level
+        regress on
+        - model:
+            - dictionary containing the regression model at each level model['lvl'] = (bw, lm, coef)
+
+        - kernel_obj: kernel used in regression model
+        - solver: instance of FalkonSolver class
+        - max_ram_usage: max ram usage in Bytes
+
+    ## Public methods
+        # train
+            - trains model on training data
+        # predict
+            - predicts with recieved data
+        # add_trained_model
+            - Adds a trained falkon model to the model variable
+        # set_bw
+            - sets the bandwidth of the kernel
+        # append_specific_landmarks
+            - if specific landmarks should be added
+        # select_random_landmarks
+            - selects landmarks uniformly from training data
+        # clear
+            -clears model
+
+    ## Private methods
+        # split_in_batches
+        # solve_in_batches
+        # train_with_timeit
+        # predict_with_timeit
     """
     def __init__(self, config):
         self.config = config
         self.model = {}
-        self.lvlcursor = 0
         self.pred_dict = {}
         self.res_dict = {}
+
+        self.lvlcursor = 0
         self.kernel_obj = choose_kernel(config['falkon']['kernelType'])
         self.solver = FalkonSolver(config)
         self.max_ram_usage = config['streamrak']['max_ram_usage'] # max ram usage in Bytes
@@ -71,6 +108,12 @@ class Lpkrr():
         return
 
     def solve_in_batches(self, x, y, lm, bw):
+        """Trains one specific level of the Lpkrr model in batches
+        :param x: n x d numpy array of training samples and
+        :param y: numpy array of length n, of y=f(x).
+        :param lm: landmarks selected from current level in cover tree
+        :param bw: bandwidth selected from radius of epsilon cover at current level
+        """
         n, ydim = y.shape
         m, xdim = lm.shape
         x_batches = self.split_in_batches(x, n, m, xdim)
@@ -186,7 +229,35 @@ class Lpkrr():
 
 
 class Streamrak(Lpkrr):
+    """Streamrak class, inherits from Lpkrr builds an epsilon cover using the cover-tree algorithm from which its
+    selects suitable landmarks for each level in the Laplacian pyramid in Lpkrr. Uses FALKON as a bases solver.
+    This class generates the Streamrak trainer and prediction interface that allows training of a model and prediction
+    with a trained model
+
+    ## Variables
+        - config: solver configurations
+        - lmfactor: number of landmarks is selected as nlm = lmfactor*sqrt(num training samples)
+        - variables inherited from Lpkrr
+
+    ## Public methods
+        # train
+            - trains model on training data
+        # predict
+            - predicts with recieved data
+        # clear
+            -clears model
+
+    ## Private methods
+        # build_cover_tree
+        # select_landmarks
+        # train_with_timeit
+        # predict_with_timeit
+
+    ## Get functions
+        # get_model
+    """
     def __init__(self, config):
+
         super().__init__(config)
         self.config = config
         self.lmfactor = float(config['streamrak']['lmfactor'])
@@ -201,6 +272,10 @@ class Streamrak(Lpkrr):
         self.coverTree = BasicCoverTree(self.config, init_radius)
 
     def build_cover_tree(self, X, Y):
+        """Builds an epsilon cover on the data using the cover-tree algorithm
+        :param X: n x d numpy array of training dataset
+        :param Y: numpy array of length n, where y = f(x)
+        """
         for x, y in zip(X, Y):
             self.coverTree.insert(x, y)
 
@@ -263,7 +338,3 @@ class Streamrak(Lpkrr):
         self.coverTree.clear()
         self.coverTree = None
         super().clear()
-
-
-
-

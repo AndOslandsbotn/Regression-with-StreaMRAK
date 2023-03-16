@@ -6,6 +6,47 @@ from utilities.choose_kernel import choose_kernel
 from tqdm import tqdm
 
 class Falkon():
+    """ This class generates the Falkon trainer and prediction interface that allows training of a model and prediction
+    with a trained model
+
+    ## Variables
+        - config: solver configurations
+        - bw: bandwidth of kernel model
+        - lms: the landmarks (Nystrom sub-samples)
+        - nlm: number of landmarks
+        - model:
+            - regression model (bw, lm, coef)
+
+        - kernel_obj: kernel used in regression model
+        - lmfactor: number of landmarks is selected as nlm = lmfactor*sqrt(num training samples)
+        - solver: instance of FalkonSolver class
+        - max_ram_usage: max ram usage in Bytes
+
+    ## Public methods
+        # train
+            - trains model on training data
+        # predict
+            - predicts with recieved data
+        # add_trained_model
+            - Adds a trained falkon model to the model variable
+        # set_bw
+            - sets the bandwidth of the kernel
+        # append_specific_landmarks
+            - if specific landmarks should be added
+        # select_random_landmarks
+            - selects landmarks uniformly from training data
+        # clear
+            -clears model
+
+    ## Private methods
+        # split_in_batches
+        # solve_in_batches
+        # train_with_timeit
+        # predict_with_timeit
+
+    ## Get functions
+        # get_model
+    """
     def __init__(self, config):
         self.config = config
         self.model = {}
@@ -27,11 +68,17 @@ class Falkon():
         self.lms = None
 
     def select_random_landmarks(self, x):
-        self.nlm = self.lmfactor #int(self.lmfactor * np.sqrt(len(x)))
+        """ Selects landmarks uniformly from the data x
+        :param x: n x d numpy array of data samples. n is the number of samples and d the dimension
+        """
+        self.nlm = int(self.lmfactor * np.sqrt(len(x)))
         lm_idx = np.random.choice(np.arange(0, len(x)), self.nlm)
         self.lms = x[lm_idx, :]
 
     def append_specific_landmarks(self, landmarks):
+        """ Adds the landmarks to the existing landmarks
+         :param landmarks: n x d numpy array of landmarks. m is the number of landmarks and d the dimension
+         """
         self.nlm = len(landmarks)
         self.lms = np.concatenate((self.lms, landmarks), axis=0)
 
@@ -45,9 +92,14 @@ class Falkon():
         x = np.array(np.array_split(x, num_batches))
         return x
 
-    def solve_in_batches(self, x, y, lm, bw):
+    def solve_in_batches(self, x, y):
+        """Trains the falkon model in batches
+        :param x: n x d numpy array of training samples and
+        :param y: numpy array of length n, of y=f(x).
+        """
+
         n, ydim = y.shape
-        m, xdim = lm.shape
+        m, xdim = self.lms.shape
         x_batches = self.split_in_batches(x, n, m, xdim)
         y_batches = self.split_in_batches(y, n, m, xdim)
 
@@ -55,8 +107,8 @@ class Falkon():
         Zm = np.zeros((m, ydim))
         for batch_nr, (x_batch, y_batch) in enumerate(zip(x_batches, y_batches)):
             print(f"Batch nr {batch_nr+1}/{len(x_batches)}")
-            KnmTKnm = KnmTKnm + self.solver.calcKnmTKnm(x_batch, lm, bw)
-            Zm = Zm + self.solver.calcZm(x_batch, y_batch, lm, bw)
+            KnmTKnm = KnmTKnm + self.solver.calcKnmTKnm(x_batch, self.lms, self.bw)
+            Zm = Zm + self.solver.calcZm(x_batch, y_batch, self.lms, self.bw)
         return KnmTKnm, Zm
 
     def set_bw(self, bw):
@@ -87,7 +139,7 @@ class Falkon():
     @timer_func
     def train_with_timeit(self, x, y):
         Kmm = self.solver.calcKmm(self.lms, self.bw)
-        KnmTKnm, Zm = self.solve_in_batches(x, y, self.lms, self.bw)
+        KnmTKnm, Zm = self.solve_in_batches(x, y)
         Zm = (1 / self.nlm) * Zm
         coef = self.solver.fit(Kmm, KnmTKnm, Zm, self.nlm)
         self.model['lvl0'] = (self.lms, self.bw, coef)
@@ -309,8 +361,7 @@ class FalkonSolver(FalkonPrecond, FalkonConjgrad, FalkonMatrixSystem):
         # Compute right hand side of W*beta = b, where W = Bt*H*B and b =Bt*Zm
         b = cholAt(cholTt(Zm))
 
-        # Compute the system matrix W as a linear operator that
-        # acts on v
+        # Compute the system matrix W as a linear operator that acts on v
         W = lambda v: self.calcW(cholT, cholTt, cholA, cholAt, KnmTKnm, N, v, self.reg_param)
 
         # Perform conjugate gradient

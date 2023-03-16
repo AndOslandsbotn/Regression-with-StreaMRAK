@@ -23,6 +23,7 @@ class TrainerBase():
         self.validation_data = validation_data
 
     def save_model(self, model, filename):
+        """Saves model to file"""
         results_folder = os.path.join(ROOT_DIR, 'StoredModels')
         Path(results_folder).mkdir(parents=True, exist_ok=True)
 
