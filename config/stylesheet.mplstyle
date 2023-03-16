@@ -1,0 +1,168 @@
+#axes.titlesize : 24
+#axes.labelsize : 20
+#lines.linewidth : 3
+#lines.markersize : 10
+#xtick.labelsize : 20
+#ytick.labelsize : 20
+
+text.color: 5a5a5a
+
+## ***************************************************************************
+## * FIGURE                                                                  *
+## ***************************************************************************
+## See https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure
+#figure.figsize:     4, 4  # figure size in inches
+#figure.dpi:         300       # figure dots per inch
+figure.facecolor:   white     # figure face color
+figure.edgecolor:   b1afb5     # figure edge color
+
+
+## The figure subplot parameters.  All dimensions are a fraction of the figure width and height.
+figure.subplot.left:   0.2  # the left side of the subplots of the figure
+#figure.subplot.right:  0.9    # the right side of the subplots of the figure
+figure.subplot.bottom: 0.2   # the bottom of the subplots of the figure
+#figure.subplot.top:    0.88   # the top of the subplots of the figure
+#figure.subplot.wspace: 0.2    # the amount of width reserved for space between subplots,
+                               # expressed as a fraction of the average axis width
+#figure.subplot.hspace: 0.2    # the amount of height reserved for space between subplots,
+                               # expressed as a fraction of the average axis height
+
+
+
+## ***************************************************************************
+## * TICKS                                                                   *
+## ***************************************************************************
+## See https://matplotlib.org/api/axis_api.html#matplotlib.axis.Tick
+xtick.color:         767676  # color of the ticks
+xtick.labelcolor:    767676  # color of the tick labels or inherit from xtick.color
+xtick.labelsize:      12 # font size of the tick labels
+xtick.minor.visible: True   # visibility of minor ticks on x-axis
+xtick.major.bottom:  True    # draw x axis bottom major ticks
+xtick.minor.bottom:  True    # draw x axis bottom minor ticks
+
+ytick.color:         767676  # color of the ticks
+ytick.labelcolor:    767676  # color of the tick labels or inherit from ytick.color
+ytick.labelsize:     12  # font size of the tick labels
+ytick.minor.visible: True   # visibility of minor ticks on y-axis
+ytick.major.left:    True    # draw y axis left major ticks
+ytick.minor.left:    True    # draw y axis left minor ticks
+
+
+## ***************************************************************************
+## * AXES                                                                    *
+## ***************************************************************************
+## Following are default face and edge colors, default tick sizes,
+## default font sizes for tick labels, and so on.  See
+## https://matplotlib.org/api/axes_api.html#module-matplotlib.axes
+axes.facecolor:     white   # axes background color
+axes.edgecolor:     b1afb5  # axes edge color
+axes.linewidth:     0.8     # edge line width
+#axes.grid:          False   # display grid or not
+#axes.grid.axis:     both    # which axis the grid should apply to
+#axes.grid.which:    major   # grid lines at {major, minor, both} ticks
+axes.labelsize:      15  # font size of the x and y labels
+axes.titlesize :     15
+axes.labelpad:       4.0     # space between label and axis
+axes.labelweight:    normal  # weight of the x and y labels
+axes.labelcolor:     5a5a5a
+
+
+axes.formatter.use_mathtext: True  # When True, use mathtext for scientific
+
+
+#axes.spines.left:   True  # display axis spines
+#axes.spines.bottom: True
+#axes.spines.top:    True
+#axes.spines.right:  True
+
+## ***************************************************************************
+## * AXIS                                                                    *
+## ***************************************************************************
+#xaxis.labellocation: center  # alignment of the xaxis label: {left, right, center}
+#yaxis.labellocation: center  # alignment of the yaxis label: {bottom, top, center}
+
+
+## ***************************************************************************
+## * GRIDS                                                                   *
+## ***************************************************************************
+#grid.color:     b1afb5  # grid color
+#grid.linestyle: -          # solid
+#grid.linewidth: 0.8        # in points
+#grid.alpha:     1.0        # transparency, between 0.0 and 1.0
+
+## ***************************************************************************
+## * LEGEND                                                                  *
+## ***************************************************************************
+legend.loc:           best
+legend.frameon:       True     # if True, draw the legend on a background patch
+legend.framealpha:    0.8     # legend patch transparency
+legend.facecolor:     inherit  # inherit from axes.facecolor; or color spec
+legend.edgecolor:     0.8      # background patch boundary color
+legend.fancybox:      True     # if True, use a rounded box for the
+                                # legend background, else a rectangle
+
+#legend.markerscale:   1.0      # the relative size of legend markers vs. original
+legend.fontsize:      12
+
+## Dimensions as fraction of fontsize:
+legend.borderpad:     0.2  # border whitespace
+legend.labelspacing:  0.4  # the vertical space between the legend entries
+legend.columnspacing: 1.5  # column separation
+
+
+## ***************************************************************************
+## * LINES                                                                   *
+## ***************************************************************************
+## See https://matplotlib.org/api/artist_api.html#module-matplotlib.lines
+## for more information on line properties.
+lines.linewidth: 2               # line width in points
+lines.markersize:  6           # marker size, in points
+
+
+## ***************************************************************************
+## * SAVING FIGURES                                                          *
+## ***************************************************************************
+## The default savefig parameters can be different from the display parameters
+## e.g., you may want a higher resolution, or to make the figure
+## background white
+savefig.dpi:       400      # figure dots per inch or 'figure'
+#savefig.format:    png         # {png, ps, pdf, svg}
+#savefig.pad_inches:  0.1       # padding to be used, when bbox is set to 'tight'
+#savefig.transparent: False     # whether figures are saved with a transparent
+                                # background by default
+#savefig.orientation: portrait  # orientation of saved figure, for PostScript output only
+
+### tk backend params
+#tk.window_focus:   False  # Maintain shell focus for TkAgg
+
+### ps backend params
+#ps.papersize:      letter  # {auto, letter, legal, ledger, A0-A10, B0-B10}
+#ps.useafm:         False   # use of AFM fonts, results in small files
+#ps.usedistiller:   False   # {ghostscript, xpdf, None}
+                            # Experimental: may produce smaller files.
+                            # xpdf intended for production of publication quality files,
+                            # but requires ghostscript, xpdf and ps2eps
+#ps.distiller.res:  6000    # dpi
+#ps.fonttype:       3       # Output Type 3 (Type3) or Type 42 (TrueType)
+
+### PDF backend params
+#pdf.compression:    6  # integer from 0 to 9
+                        # 0 disables compression (good for debugging)
+#pdf.fonttype:       3  # Output Type 3 (Type3) or Type 42 (TrueType)
+#pdf.use14corefonts: False
+#pdf.inheritcolor:   False
+
+### SVG backend params
+#svg.image_inline: True  # Write raster image data directly into the SVG file
+#svg.fonttype: path      # How to handle SVG fonts:
+                         #     path: Embed characters as paths -- supported
+                         #           by most SVG renderers
+                         #     None: Assume fonts are installed on the
+                         #           machine where the SVG will be viewed.
+#svg.hashsalt: None      # If not None, use this string as hash salt instead of uuid4
+
+### pgf parameter
+## See https://matplotlib.org/tutorials/text/pgf.html for more information.
+#pgf.rcfonts: True
+#pgf.preamble:  # See text.latex.preamble for documentation
+#pgf.texsystem: xelatex

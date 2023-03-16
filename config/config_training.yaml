@@ -1,0 +1,3 @@
+### This is the configuration file for the training of the algorithm
+falkon:
+  bw_grid: [1, -2, 100]  # Bw grid info [min, max, num_samples], np.logspace(bwmax, bwmin, size)

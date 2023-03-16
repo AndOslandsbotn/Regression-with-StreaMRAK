@@ -1,0 +1,18 @@
+general:
+  debug: False
+covertree:
+  nlvls: 9 #12
+  r_reduce_factor: 2
+streamrak:
+  lmfactor: 10
+  max_ram_usage: 10000000000 # max ram usage in Bytes
+falkon:
+  reg_param: 1.e-3
+  conj_grad_max_iter: 100
+  conj_grad_thr: 10.e-100
+  chol_reg: 10.e-10
+  kernelType: 'gaussianKernel'
+  num_landmarks: 15  # Number of landmarks to select randomly
+  max_ram_usage: 10000000000 # max ram usage in Bytes
+
+
